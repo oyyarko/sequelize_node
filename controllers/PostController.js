@@ -21,9 +21,9 @@ module.exports.CreatePost = async (req, res, next) => {
 };
 
 module.exports.GetPostByUserId = async (req, res, next) => {
-  const { userId } = req.params;
+  const { user_id } = req.params;
   try {
-    const user = await db.Users.findByPk(userId, {
+    const user = await db.Users.findByPk(user_id, {
       include: {
         model: db.Posts,
         as: "posts",
@@ -40,7 +40,6 @@ module.exports.GetPostByUserId = async (req, res, next) => {
     });
     next();
   } catch (err) {
-    console.log('err :>> ', err);
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };
