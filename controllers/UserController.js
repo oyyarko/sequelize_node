@@ -3,7 +3,7 @@ const db = require("../models");
 
 module.exports.ListUsers = async (req, res, next) => {
   try {
-    const users = await db.User.findAll();
+    const users = await db.Users.findAll();
     res
       .status(200)
       .json({ message: "Fetched successfully!", success: true, data: users });

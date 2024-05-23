@@ -4,7 +4,8 @@
     "password": "admin123",
     "database": "insta_db",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": true
   },
   "test": {
     "username": "root",
