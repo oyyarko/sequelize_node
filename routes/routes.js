@@ -1,11 +1,14 @@
-const { CreateCommentOnPost, GetAllCommentsForPost } = require("../controllers/CommentController");
+const { ListUsers, SignUp, Login } = require("../controllers/UserController");
 const { CreatePost, GetPostByUserId, ListAllPosts } = require("../controllers/PostController");
-const { ListUsers } = require("../controllers/UserController");
+const { CreateCommentOnPost, GetAllCommentsForPost } = require("../controllers/CommentController");
+const { AuthenticateUser } = require("../middleware/AuthMiddleware");
 
 const router = require("express").Router();
 
 //user
-router.get("/listUsers", ListUsers);
+router.post("/login", Login);
+router.post("/signup", SignUp);
+router.get("/listUsers", AuthenticateUser, ListUsers);
 
 //post
 router.get("/listPosts", ListAllPosts);

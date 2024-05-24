@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize, DataTypes) => {
   const Users = sequelize.define(
@@ -22,13 +23,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     { timestamps: false }
   );
 
   // Hook to generate UUID before creating Users
-  Users.beforeCreate((user) => {
+  Users.beforeCreate(async (user) => {
     user.user_id = uuidv4();
+    user.password = await bcrypt.hash(user.password, 10);
   });
 
   Users.associate = (models) => {
@@ -41,6 +47,6 @@ module.exports = (sequelize, DataTypes) => {
       as: "comments",
     });
   };
-
+  
   return Users;
 };

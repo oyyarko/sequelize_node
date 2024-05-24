@@ -1,5 +1,3 @@
-const { v4: uuidv4 } = require("uuid");
-
 module.exports = (sequelize, DataTypes) => {
   const Posts = sequelize.define(
     "Posts",
@@ -30,5 +28,6 @@ module.exports = (sequelize, DataTypes) => {
       as: "comments",
     });
   };
+
   return Posts;
 };
