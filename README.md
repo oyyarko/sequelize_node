@@ -12,17 +12,17 @@
 
 #### TO-DO api's
 
-[ ] Pagination in Posts and Users
-[ ] Like and Unlike a Post
-[ ] Follow and Unfollow users
-[ ] Account freez and unfreez
-[ ] Account delete
-[x] Account signup and login
-[x] JWT authentication
-[ ] Search Users
-[x] Delete Post
-[x] Update Post
-[x] Update User
-[ ] Delete Comment
-[ ] Save or Unsave Posts
-[ ] Suggested Users or Posts
+1. [ ] Pagination in Posts and Users
+2. [ ] Like and Unlike a Post
+3. [ ] Follow and Unfollow users
+4. [ ] Account freez and unfreez
+5. [ ] Account delete
+6. [x] Account signup and login
+7. [x] JWT authentication
+8. [ ] Search Users
+9. [x] Delete Post
+10. [x] Update Post
+11. [x] Update User
+12. [ ] Delete Comment
+13. [ ] Save or Unsave Posts
+14. [ ] Suggested Users or Posts
