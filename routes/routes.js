@@ -1,5 +1,5 @@
 const { CreateCommentOnPost, GetAllCommentsForPost } = require("../controllers/CommentController");
-const { CreatePost, GetPostByUserId } = require("../controllers/PostController");
+const { CreatePost, GetPostByUserId, ListAllPosts } = require("../controllers/PostController");
 const { ListUsers } = require("../controllers/UserController");
 
 const router = require("express").Router();
@@ -8,6 +8,7 @@ const router = require("express").Router();
 router.get("/listUsers", ListUsers);
 
 //post
+router.get("/listPosts", ListAllPosts);
 router.post("/createPost", CreatePost);
 router.post("/getPostByUserId/:user_id/posts", GetPostByUserId)
 

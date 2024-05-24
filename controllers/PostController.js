@@ -1,6 +1,20 @@
 require("dotenv").config();
 const db = require("../models");
 
+module.exports.ListAllPosts = async (req, res, next) => {
+  try {
+    const posts = await db.Posts.findAll();
+    res.status(201).json({
+      message: "Post fetched successfully!",
+      success: true,
+      data: posts,
+    });
+    next();
+  } catch (err) {
+    res.status(500).json({ message: err, success: false, data: [] });
+  }
+};
+
 module.exports.CreatePost = async (req, res, next) => {
   const { posted_by, title, content } = req.body;
   try {

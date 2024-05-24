@@ -41,7 +41,7 @@ module.exports.GetAllCommentsForPost = async (req, res, next) => {
       return res.status(400).json({ error: "Post not found" });
     }
     res.status(200).json({
-      message: "Commentes fetched successfully!",
+      message: "Comments fetched successfully!",
       success: true,
       data: post.comments,
     });

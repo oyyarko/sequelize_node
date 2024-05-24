@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "admin",
-    "password": "admin123",
+    "username": "root",
+    "password": "",
     "database": "insta_db",
     "host": "localhost",
     "dialect": "mysql",
