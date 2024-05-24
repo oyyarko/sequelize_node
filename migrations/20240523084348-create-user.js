@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       profilePicture: {
-        type: Sequelize.STRING,
+        type: Sequelize.BLOB,
         allowNull: true,
       },
       password: {

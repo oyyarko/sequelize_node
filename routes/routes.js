@@ -16,6 +16,7 @@ const {
   GetAllCommentsForPost,
 } = require("../controllers/CommentController");
 const { AuthenticateUser } = require("../middleware/AuthMiddleware");
+const upload = require("../utils/Upload");
 
 const router = require("express").Router();
 
@@ -23,7 +24,12 @@ const router = require("express").Router();
 router.post("/login", Login);
 router.post("/signup", SignUp);
 router.get("/listUsers", AuthenticateUser, ListUsers);
-router.patch("/updateUser/:user_id", AuthenticateUser, UpdateUser);
+router.patch(
+  "/updateUser/:user_id",
+  upload.single("file"),
+  AuthenticateUser,
+  UpdateUser
+);
 
 //post
 router.get("/listPosts", AuthenticateUser, ListAllPosts);

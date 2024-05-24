@@ -96,18 +96,18 @@ module.exports.ListUsers = async (req, res, next) => {
 
 module.exports.UpdateUser = async (req, res, next) => {
   const { user_id } = req.params;
-  const { username, bio, profilePicture, password } = req.body;
+  const { username, bio, password } = req.body;
+  const { file } = req;
   try {
     const usernameRegex = /^[a-zA-Z0-9]+$/;
     const user = await db.Users.findByPk(user_id);
     if (!user) {
       return res.status(400).json({ error: "User doesn't exist" });
     }
-
     if (username) {
       if (!usernameRegex.test(username)) {
         return res.status(400).json({ error: "Please provide valid username" });
-      } else if (user.user_id !== user_id) {
+      } else {
         const existingUser = await db.Users.findOne({ where: username });
         if (existingUser && existingUser.user_id !== user_id) {
           return res.status(400).json({ error: "Username is taken" });
@@ -115,8 +115,11 @@ module.exports.UpdateUser = async (req, res, next) => {
         user.username = username;
       }
     }
+    if (file) {
+      const base64Image = file.buffer.toString("base64");
+      user.profilePicture = base64Image;
+    }
     if (bio) user.bio = bio;
-    if (profilePicture) user.profilePicture = profilePicture;
     if (password) user.password = await bcrypt.hash(password, 10);
 
     await user.save();
@@ -128,7 +131,6 @@ module.exports.UpdateUser = async (req, res, next) => {
     });
     next();
   } catch (err) {
-    console.log("err :>> ", err);
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };
