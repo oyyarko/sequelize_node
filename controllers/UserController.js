@@ -13,7 +13,7 @@ module.exports.SignUp = async (req, res, next) => {
     if (!username || !usernameRegex.test(username)) {
       return res.status(400).json({ error: "Please provide valid username" });
     }
-    if(!password) {
+    if (!password) {
       return res.status(400).json({ error: "Please provide password" });
     }
     const existingUser = await db.Users.findOne({ where: { username } });
@@ -90,6 +90,45 @@ module.exports.ListUsers = async (req, res, next) => {
       .json({ message: "Fetched successfully!", success: true, data: users });
     next();
   } catch (err) {
+    res.status(500).json({ message: err, success: false, data: [] });
+  }
+};
+
+module.exports.UpdateUser = async (req, res, next) => {
+  const { user_id } = req.params;
+  const { username, bio, profilePicture, password } = req.body;
+  try {
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    const user = await db.Users.findByPk(user_id);
+    if (!user) {
+      return res.status(400).json({ error: "User doesn't exist" });
+    }
+
+    if (username) {
+      if (!usernameRegex.test(username)) {
+        return res.status(400).json({ error: "Please provide valid username" });
+      } else if (user.user_id !== user_id) {
+        const existingUser = await db.Users.findOne({ where: username });
+        if (existingUser && existingUser.user_id !== user_id) {
+          return res.status(400).json({ error: "Username is taken" });
+        }
+        user.username = username;
+      }
+    }
+    if (bio) user.bio = bio;
+    if (profilePicture) user.profilePicture = profilePicture;
+    if (password) user.password = await bcrypt.hash(password, 10);
+
+    await user.save();
+
+    res.status(201).json({
+      message: "User updated successfully!",
+      success: true,
+      data: user,
+    });
+    next();
+  } catch (err) {
+    console.log("err :>> ", err);
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };

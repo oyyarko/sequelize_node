@@ -34,6 +34,63 @@ module.exports.CreatePost = async (req, res, next) => {
   }
 };
 
+module.exports.UpdatePost = async (req, res, next) => {
+  const { post_id } = req.params;
+  const { title, content, posted_by } = req.body;
+  try {
+    const user = await db.Users.findByPk(posted_by);
+    if (!posted_by) {
+      return res.status(400).json({ error: "Please provide User" });
+    } else if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    } else if (!post_id) {
+      return res.status(400).json({ error: "Please provide Post" });
+    }
+
+    const post = await db.Posts.findByPk(post_id);
+    if (!post) {
+      return res.status(400).json({ error: "Post not found" });
+    } else if (post.posted_by !== posted_by) {
+      return res
+        .status(400)
+        .json({ error: "Unauthorised! Can not update Post" });
+    }
+
+    if (title) post.title = title;
+    if (content) post.content = content;
+
+    await post.save();
+    res.status(201).json({
+      message: "Post updated successfully!",
+      success: true,
+      data: post,
+    });
+    next();
+  } catch (err) {
+    res.status(500).json({ message: err, success: false, data: [] });
+  }
+};
+
+module.exports.DeletePost = async (req, res, next) => {
+  const { post_id } = req.params;
+  try {
+    const post = await db.Posts.findByPk(post_id);
+    if (!post) {
+      return res.status(400).json({ error: "Post not found" });
+    }
+
+    await post.destroy();
+
+    res.status(200).json({
+      message: "Post deleted successfully!",
+      success: true,
+    });
+    next();
+  } catch (err) {
+    res.status(500).json({ message: err, success: false, data: [] });
+  }
+};
+
 module.exports.GetPostByUserId = async (req, res, next) => {
   const { user_id } = req.params;
   try {
