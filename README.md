@@ -13,8 +13,8 @@
 #### TO-DO api's
 
 1. [ ] Pagination in Posts and Users
-2. [ ] Like and Unlike a Post
-3. [ ] Follow and Unfollow users
+2. [x] Like and Unlike a Post
+3. [x] Follow and Unfollow users
 4. [ ] Account freez and unfreez
 5. [ ] Account delete
 6. [x] Account signup and login
@@ -26,3 +26,4 @@
 12. [ ] Delete Comment
 13. [ ] Save or Unsave Posts
 14. [ ] Suggested Users or Posts
+14. [x] Users following/followers list

@@ -4,12 +4,12 @@ const bcrypt = require("bcryptjs");
 const db = require("../models");
 const { createSecretToken } = require("../utils/SecretToken");
 
+const usernameRegex = /^[a-zA-Z0-9_]+$/;
+
 module.exports.SignUp = async (req, res, next) => {
   const { username, bio, profilePicture, password } = req.body;
 
   try {
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
-
     if (!username || !usernameRegex.test(username)) {
       return res.status(400).json({ error: "Please provide valid username" });
     }
@@ -99,7 +99,6 @@ module.exports.UpdateUser = async (req, res, next) => {
   const { username, bio, password } = req.body;
   const { file } = req;
   try {
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
     const user = await db.Users.findByPk(user_id);
     if (!user) {
       return res.status(400).json({ error: "User doesn't exist" });

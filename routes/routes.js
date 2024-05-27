@@ -18,6 +18,7 @@ const {
 const { AuthenticateUser } = require("../middleware/AuthMiddleware");
 const upload = require("../utils/Upload");
 const { LikeOrUnlikePost, ListLikesOfPost } = require("../controllers/LikeController");
+const { FollowOrUnfollowUser, ListUserFollowingOrFollowers } = require("../controllers/FollowerController");
 
 const router = require("express").Router();
 
@@ -51,8 +52,11 @@ router.get(
   GetAllCommentsForPost
 );
 
-//likes
+//followers
+router.post("/followOrUnfollowUser", AuthenticateUser, FollowOrUnfollowUser);
+router.post("/listUserFollowingOrFollowers", AuthenticateUser, ListUserFollowingOrFollowers);
 
+//likes
 router.post("/likeOrUnlikePost", AuthenticateUser, LikeOrUnlikePost);
 router.get("/listLikesOfPost/:post_id", AuthenticateUser, ListLikesOfPost);
 
