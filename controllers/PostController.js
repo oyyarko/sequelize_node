@@ -22,6 +22,7 @@ module.exports.CreatePost = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }
+
     const newPost = await db.Posts.create({ posted_by, title, content });
     res.status(201).json({
       message: "Post created successfully!",
@@ -104,7 +105,7 @@ module.exports.GetPostByUserId = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }
-    res.status(201).json({
+    res.status(200).json({
       message: `Post by ${user.username} user fetched successfully!`,
       success: true,
       data: user.posts,

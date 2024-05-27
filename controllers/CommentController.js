@@ -50,3 +50,12 @@ module.exports.GetAllCommentsForPost = async (req, res, next) => {
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };
+
+// module.exports.CommentOnParentComment = async (req, res, next) => {
+//   const { comment_id, user_id, comment } = req.body;
+//   try {
+//     next();
+//   } catch (err) {
+//     res.status(500).json({ message: err, success: false, data: [] });
+//   }
+// };

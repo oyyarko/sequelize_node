@@ -17,6 +17,7 @@ const {
 } = require("../controllers/CommentController");
 const { AuthenticateUser } = require("../middleware/AuthMiddleware");
 const upload = require("../utils/Upload");
+const { LikeOrUnlikePost, ListLikesOfPost } = require("../controllers/LikeController");
 
 const router = require("express").Router();
 
@@ -49,5 +50,11 @@ router.get(
   AuthenticateUser,
   GetAllCommentsForPost
 );
+
+//likes
+
+router.post("/likeOrUnlikePost", AuthenticateUser, LikeOrUnlikePost);
+router.get("/listLikesOfPost/:post_id", AuthenticateUser, ListLikesOfPost);
+
 
 module.exports = router;
