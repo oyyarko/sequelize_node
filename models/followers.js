@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Followers.associate = (models) => {
     Followers.belongsTo(models.Users, {
-      foreignKey: "follower_id",
+      foreignKey: "following_id",
       as: "followers",
     });
     Followers.belongsTo(models.Users, {
-      foreignKey: "following_id",
+      foreignKey: "follower_id",
       as: "followings",
     });
   };

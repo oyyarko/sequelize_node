@@ -70,49 +70,17 @@ module.exports.ListUserFollowingOrFollowers = async (req, res, next) => {
       include: [
         {
           model: db.Followers,
-          as: "followings",
-          attributes: ["following_id"],
+          as: "followers",
+          attributes: ["follower_id"],
         },
         {
           model: db.Followers,
-          as: "followers",
-          attributes: ["follower_id"],
+          as: "followings",
+          attributes: ["following_id"],
         },
       ],
       attributes: ["username", "user_id"],
     });
-
-    // const followings = await db.Followers.findAll(
-    //   {
-    //     where: {
-    //       follower_id: user_id,
-    //     },
-    //     attributes: ["following_id"],
-    //   },
-    //   {
-    //     include: {
-    //       model: db.Users,
-    //       as: "followings",
-    //       attributes: ["username", "user_id"]
-    //     },
-    //   }
-    // );
-
-    // const followers = await db.Followers.findAll(
-    //   {
-    //     where: {
-    //       following_id: user_id,
-    //     },
-    //     attributes: ["follower_id"],
-    //   },
-    //   {
-    //     include: {
-    //       model: db.Users,
-    //       as: "followers",
-    //       attributes: ["username", "user_id"],
-    //     },
-    //   }
-    // );
 
     res.status(200).json({
       message: `Followers fetched successfully!`,

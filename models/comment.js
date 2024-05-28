@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
           key: "user_id",
         },
       },
+      parent_id: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
     },
     { timestamps: false }
   );
@@ -37,6 +41,14 @@ module.exports = (sequelize, DataTypes) => {
     Comments.belongsTo(models.Posts, {
       foreignKey: "post_id",
       as: "post",
+    });
+    Comments.belongsTo(models.Comments, {
+      foreignKey: "parent_id",
+      as: "parent",
+    });
+    Comments.hasMany(models.Comments, {
+      foreignKey: "parent_id",
+      as: "replies",
     });
   };
   return Comments;

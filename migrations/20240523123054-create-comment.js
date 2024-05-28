@@ -31,6 +31,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      parent_id: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: 'Comments',
+          key: 'comment_id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {

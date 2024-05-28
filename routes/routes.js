@@ -60,5 +60,4 @@ router.post("/listUserFollowingOrFollowers", AuthenticateUser, ListUserFollowing
 router.post("/likeOrUnlikePost", AuthenticateUser, LikeOrUnlikePost);
 router.get("/listLikesOfPost/:post_id", AuthenticateUser, ListLikesOfPost);
 
-
 module.exports = router;

@@ -26,4 +26,11 @@
 12. [ ] Delete Comment
 13. [ ] Save or Unsave Posts
 14. [ ] Suggested Users or Posts
-14. [x] Users following/followers list
+15. [x] Users following/followers list
+16. [ ] Message between two user [Socet.io]
+17. [ ] Group Message [Socket.io]
+18. [x] Nested Comment [hierarchy]
+19. [ ] Share posts with other Users
+20. [ ] Public or Private account
+21. [ ] Accept/Reject Request if private account
+22. [ ] display posts when private and followed, no validation for public

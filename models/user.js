@@ -51,23 +51,13 @@ module.exports = (sequelize, DataTypes) => {
       as: "likes",
     });
     Users.hasMany(models.Followers, {
-      foreignKey: "follower_id",
+      foreignKey: "following_id",
       as: "followers",
     });
     Users.hasMany(models.Followers, {
-      foreignKey: "following_id",
+      foreignKey: "follower_id",
       as: "followings",
     });
-    // Users.belongsToMany(models.Users, {
-    //   through: models.Followers,
-    //   as: "followers",
-    //   foreignKey: "following_id",
-    // });
-    // Users.belongsToMany(models.Users, {
-    //   through: models.Followers,
-    //   as: "followings",
-    //   foreignKey: "follower_id",
-    // });
   };
 
   return Users;
