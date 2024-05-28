@@ -2,8 +2,33 @@ require("dotenv").config();
 const db = require("../models");
 
 module.exports.ListAllPosts = async (req, res, next) => {
+  const page = req.query.page || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+
   try {
-    const posts = await db.Posts.findAll();
+    const { id: loggedIn } = req.user;
+    const followingIds = await db.Users.findByPk(loggedIn, {
+      attributes: ["user_id"],
+      include: [
+        {
+          model: db.Followers,
+          as: "followings",
+          attributes: ["following_id"],
+        },
+      ],
+    });
+
+    const fetchPosts = followingIds.followings.map(
+      (following) => following.following_id
+    );
+
+    const posts = await db.Posts.findAndCountAll({
+      where: { posted_by: fetchPosts },
+      limit,
+      offset,
+    });
+    
     res.status(201).json({
       message: "Post fetched successfully!",
       success: true,

@@ -7,7 +7,7 @@ const { createSecretToken } = require("../utils/SecretToken");
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
 module.exports.SignUp = async (req, res, next) => {
-  const { username, bio, profilePicture, password } = req.body;
+  const { username, bio, profilePicture, password, isPrivate = 0 } = req.body;
 
   try {
     if (!username || !usernameRegex.test(username)) {
@@ -26,6 +26,7 @@ module.exports.SignUp = async (req, res, next) => {
       bio,
       profilePicture,
       password,
+      isPrivate,
     });
 
     const token = createSecretToken(newUser.user_id);
@@ -84,7 +85,9 @@ module.exports.Login = async (req, res, next) => {
 
 module.exports.ListUsers = async (req, res, next) => {
   try {
-    const users = await db.Users.findAll();
+    const users = await db.Users.findAll({
+      attributes: ["username", "user_id", "bio", "profilePicture", "isPrivate"],
+    });
     res
       .status(200)
       .json({ message: "Fetched successfully!", success: true, data: users });
@@ -96,7 +99,7 @@ module.exports.ListUsers = async (req, res, next) => {
 
 module.exports.UpdateUser = async (req, res, next) => {
   const { user_id } = req.params;
-  const { username, bio, password } = req.body;
+  const { username, bio, password, isPrivate } = req.body;
   const { file } = req;
   try {
     const user = await db.Users.findByPk(user_id);
@@ -119,6 +122,7 @@ module.exports.UpdateUser = async (req, res, next) => {
       user.profilePicture = base64Image;
     }
     if (bio) user.bio = bio;
+    if (isPrivate) user.isPrivate = isPrivate;
     if (password) user.password = await bcrypt.hash(password, 10);
 
     await user.save();

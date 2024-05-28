@@ -31,6 +31,6 @@
 17. [ ] Group Message [Socket.io]
 18. [x] Nested Comment [hierarchy]
 19. [ ] Share posts with other Users
-20. [ ] Public or Private account
+20. [x] Public or Private account
 21. [ ] Accept/Reject Request if private account
 22. [ ] display posts when private and followed, no validation for public
