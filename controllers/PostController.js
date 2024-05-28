@@ -27,15 +27,8 @@ module.exports.ListAllPosts = async (req, res, next) => {
       where: { posted_by: fetchPosts },
       limit,
       offset,
-      include: [
-        {
-          model: db.Users,
-          as: 'users',
-          attributes: ['username'], // Only include the username attribute
-        },
-      ],
     });
-    
+
     res.status(201).json({
       message: "Post fetched successfully!",
       success: true,
@@ -48,14 +41,15 @@ module.exports.ListAllPosts = async (req, res, next) => {
 };
 
 module.exports.CreatePost = async (req, res, next) => {
-  const { posted_by, title, content } = req.body;
+  const { title, content } = req.body;
   try {
-    const user = await db.Users.findByPk(posted_by);
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
+    const { id: loggedIn } = req.user;
 
-    const newPost = await db.Posts.create({ posted_by, title, content });
+    const newPost = await db.Posts.create({
+      posted_by: loggedIn,
+      title,
+      content,
+    });
     res.status(201).json({
       message: "Post created successfully!",
       success: true,
@@ -69,12 +63,11 @@ module.exports.CreatePost = async (req, res, next) => {
 
 module.exports.UpdatePost = async (req, res, next) => {
   const { post_id } = req.params;
-  const { title, content, posted_by } = req.body;
+  const { title, content } = req.body;
   try {
-    const user = await db.Users.findByPk(posted_by);
-    if (!posted_by) {
-      return res.status(400).json({ error: "Please provide User" });
-    } else if (!user) {
+    const { id: loggedIn } = req.user;
+    const user = await db.Users.findByPk(loggedIn);
+    if (!user) {
       return res.status(400).json({ error: "User not found" });
     } else if (!post_id) {
       return res.status(400).json({ error: "Please provide Post" });
@@ -83,7 +76,7 @@ module.exports.UpdatePost = async (req, res, next) => {
     const post = await db.Posts.findByPk(post_id);
     if (!post) {
       return res.status(400).json({ error: "Post not found" });
-    } else if (post.posted_by !== posted_by) {
+    } else if (post.posted_by !== loggedIn) {
       return res
         .status(400)
         .json({ error: "Unauthorised! Can not update Post" });
@@ -107,11 +100,16 @@ module.exports.UpdatePost = async (req, res, next) => {
 module.exports.DeletePost = async (req, res, next) => {
   const { post_id } = req.params;
   try {
+    const { id: loggedIn } = req.user;
     const post = await db.Posts.findByPk(post_id);
     if (!post) {
       return res.status(400).json({ error: "Post not found" });
     }
-
+    if (post.posted_by !== loggedIn) {
+      return res
+        .status(400)
+        .json({ error: "Unauthorised! Can not delete Post" });
+    }
     await post.destroy();
 
     res.status(200).json({

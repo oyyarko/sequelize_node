@@ -37,3 +37,10 @@
 23. [x] Followers list only if user request is accepted and public users
 24. [x] Pending Requests
 25. [x] Remove User from following
+
+
+#### TO-DO issue fixing
+
+1. [x] Only owner of Post/Comment can delete it
+2. [x] Nested comment debug
+3. [x] Don't allow reliking

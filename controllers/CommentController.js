@@ -2,22 +2,24 @@ require("dotenv").config();
 const db = require("../models");
 
 module.exports.CreateCommentOnPost = async (req, res, next) => {
-  const { user_id, post_id, comment, parent_id } = req.body;
+  const { post_id, comment, parent_id } = req.body;
   try {
-    const user = await db.Users.findByPk(user_id);
+    const { id: loggedIn } = req.user;
     const post = await db.Posts.findByPk(post_id);
 
-    if (!user || !post) {
+    if (!post) {
       return res.status(400).json({ error: "User or Post not found" });
     }
 
-    const existingComment = await db.Comments.findByPk(parent_id);
-    if (!existingComment) {
-      return res.status(400).json({ error: "Parent comment not found" });
+    if (parent_id) {
+      const existingComment = await db.Comments.findByPk(parent_id);
+      if (!existingComment) {
+        return res.status(400).json({ error: "Parent comment not found" });
+      }
     }
 
     const newComment = await db.Comments.create({
-      user_id,
+      user_id: loggedIn,
       post_id,
       comment,
       parent_id,
@@ -37,11 +39,16 @@ module.exports.CreateCommentOnPost = async (req, res, next) => {
 module.exports.DeleteComment = async (req, res, next) => {
   const { comment_id } = req.params;
   try {
+    const { id: loggedIn } = req.user;
     const comment = await db.Comments.findByPk(comment_id);
     if (!comment) {
       return res.status(400).json({ error: "Comment not found" });
     }
-
+    if (comment.user_id !== loggedIn) {
+      return res
+        .status(400)
+        .json({ error: "Unauthorised! Can not delete Comment" });
+    }
     await comment.destroy();
 
     res.status(200).json({
@@ -83,7 +90,7 @@ module.exports.GetAllCommentsForPost = async (req, res, next) => {
 
     nestedComments.forEach((item) => {
       if (item.parent_id) {
-        itemsById[item.parent_id].replies.push(itemsById[item.comment_id]);
+        itemsById[item.parent_id]?.replies?.push(itemsById[item.comment_id]);
       }
     });
 

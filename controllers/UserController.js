@@ -98,11 +98,11 @@ module.exports.ListUsers = async (req, res, next) => {
 };
 
 module.exports.UpdateUser = async (req, res, next) => {
-  const { user_id } = req.params;
   const { username, bio, password, isPrivate } = req.body;
   const { file } = req;
   try {
-    const user = await db.Users.findByPk(user_id);
+    const { id: loggedIn } = req.user;
+    const user = await db.Users.findByPk(loggedIn);
     if (!user) {
       return res.status(400).json({ error: "User doesn't exist" });
     }
@@ -111,7 +111,7 @@ module.exports.UpdateUser = async (req, res, next) => {
         return res.status(400).json({ error: "Please provide valid username" });
       } else {
         const existingUser = await db.Users.findOne({ where: username });
-        if (existingUser && existingUser.user_id !== user_id) {
+        if (existingUser && existingUser.user_id !== loggedIn) {
           return res.status(400).json({ error: "Username is taken" });
         }
         user.username = username;

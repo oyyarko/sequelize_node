@@ -2,15 +2,16 @@ require("dotenv").config();
 const db = require("../models");
 
 module.exports.FollowOrUnfollowUser = async (req, res, next) => {
-  const { follower_id, following_id } = req.body;
+  const { following_id } = req.body;
   try {
-    if (follower_id === following_id) {
+    const { id: loggedIn } = req.user;
+    if (loggedIn === following_id) {
       return res.status(400).json({ error: "You cannot follow youself" });
-    } else if (!follower_id || !following_id) {
+    } else if (!loggedIn || !following_id) {
       return res.status(400).json({ error: "Please provide User" });
     }
 
-    const currUser = await db.Users.findByPk(follower_id);
+    const currUser = await db.Users.findByPk(loggedIn);
     const followingUser = await db.Users.findByPk(following_id);
 
     if (!currUser || !followingUser) {
@@ -19,7 +20,7 @@ module.exports.FollowOrUnfollowUser = async (req, res, next) => {
 
     const existingFollow = await db.Followers.findOne({
       where: {
-        follower_id: follower_id,
+        follower_id: loggedIn,
         following_id: following_id,
       },
     });
@@ -27,7 +28,7 @@ module.exports.FollowOrUnfollowUser = async (req, res, next) => {
     if (!existingFollow) {
       // not following
       const followUser = await db.Followers.create({
-        follower_id,
+        follower_id: loggedIn,
         following_id,
         ...(followingUser.isPrivate ? { accepted: 0 } : { accepted: 1 }),
       });
@@ -42,7 +43,7 @@ module.exports.FollowOrUnfollowUser = async (req, res, next) => {
     } else {
       // already following
       if (
-        existingFollow.follower_id !== follower_id ||
+        existingFollow.follower_id !== loggedIn ||
         existingFollow.following_id !== following_id
       ) {
         return res
@@ -165,11 +166,10 @@ module.exports.ListPendingFollowRequests = async (req, res, next) => {
 };
 
 module.exports.ListUserFollowingOrFollowers = async (req, res, next) => {
-  const { user_id } = req.params;
   try {
-    if (!user_id) return res.status(400).json({ error: "Please provide User" });
+    const { id: loggedIn } = req.user;
 
-    const followings = await db.Users.findByPk(user_id, {
+    const followings = await db.Users.findByPk(loggedIn, {
       include: [
         {
           model: db.Followers,

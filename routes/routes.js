@@ -37,7 +37,7 @@ router.post("/login", Login);
 router.post("/signup", SignUp);
 router.get("/listUsers", AuthenticateUser, ListUsers);
 router.patch(
-  "/updateUser/:user_id",
+  "/updateUser",
   upload.single("file"),
   AuthenticateUser,
   UpdateUser
@@ -72,7 +72,7 @@ router.post(
   AcceptOrRejectFollowRequest
 );
 router.get(
-  "/listUserFollowingOrFollowers/:user_id",
+  "/listUserFollowingOrFollowers",
   AuthenticateUser,
   ListUserFollowingOrFollowers
 );
