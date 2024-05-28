@@ -11,6 +11,12 @@ module.exports.CreateCommentOnPost = async (req, res, next) => {
     if (!user || !post) {
       return res.status(400).json({ error: "User or Post not found" });
     }
+
+    const existingComment = await db.Comments.findByPk(parent_id);
+    if (!existingComment) {
+      return res.status(400).json({ error: "Parent comment not found" });
+    }
+    
     const newComment = await db.Comments.create({
       user_id,
       post_id,
