@@ -12,13 +12,23 @@ const {
   DeletePost,
 } = require("../controllers/PostController");
 const {
+  DeleteComment,
   CreateCommentOnPost,
   GetAllCommentsForPost,
 } = require("../controllers/CommentController");
 const { AuthenticateUser } = require("../middleware/AuthMiddleware");
 const upload = require("../utils/Upload");
-const { LikeOrUnlikePost, ListLikesOfPost } = require("../controllers/LikeController");
-const { FollowOrUnfollowUser, ListUserFollowingOrFollowers } = require("../controllers/FollowerController");
+const {
+  LikeOrUnlikePost,
+  ListLikesOfPost,
+} = require("../controllers/LikeController");
+const {
+  FollowOrUnfollowUser,
+  ListUserFollowingOrFollowers,
+  ListPendingFollowRequests,
+  AcceptOrRejectFollowRequest,
+  RemoveUser,
+} = require("../controllers/FollowerController");
 
 const router = require("express").Router();
 
@@ -45,6 +55,7 @@ router.post(
 );
 
 //comments
+router.delete("/deleteComment/:comment_id", AuthenticateUser, DeleteComment);
 router.post("/createCommentOnPost", AuthenticateUser, CreateCommentOnPost);
 router.get(
   "/getCommentsForPosts/:post_id/comments",
@@ -53,8 +64,23 @@ router.get(
 );
 
 //followers
+router.post("/removeUser", AuthenticateUser, RemoveUser);
 router.post("/followOrUnfollowUser", AuthenticateUser, FollowOrUnfollowUser);
-router.post("/listUserFollowingOrFollowers", AuthenticateUser, ListUserFollowingOrFollowers);
+router.post(
+  "/acceptOrRejectFollowRequest",
+  AuthenticateUser,
+  AcceptOrRejectFollowRequest
+);
+router.get(
+  "/listUserFollowingOrFollowers/:user_id",
+  AuthenticateUser,
+  ListUserFollowingOrFollowers
+);
+router.get(
+  "/listPendingFollowRequests",
+  AuthenticateUser,
+  ListPendingFollowRequests
+);
 
 //likes
 router.post("/likeOrUnlikePost", AuthenticateUser, LikeOrUnlikePost);

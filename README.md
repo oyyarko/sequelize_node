@@ -12,7 +12,7 @@
 
 #### TO-DO api's
 
-1. [ ] Pagination in Posts and Users
+1. [x] Pagination in Posts and Users
 2. [x] Like and Unlike a Post
 3. [x] Follow and Unfollow users
 4. [ ] Account freez and unfreez
@@ -23,14 +23,17 @@
 9. [x] Delete Post
 10. [x] Update Post
 11. [x] Update User
-12. [ ] Delete Comment
+12. [x] Delete Comment
 13. [ ] Save or Unsave Posts
 14. [ ] Suggested Users or Posts
 15. [x] Users following/followers list
-16. [ ] Message between two user [Socet.io]
+16. [ ] Message between two user [Socket.io]
 17. [ ] Group Message [Socket.io]
 18. [x] Nested Comment [hierarchy]
 19. [ ] Share posts with other Users
 20. [x] Public or Private account
-21. [ ] Accept/Reject Request if private account
-22. [ ] display posts when private and followed, no validation for public
+21. [x] Accept/Reject Request if private account
+22. [x] Display posts when private and followed, no validation for public
+23. [x] Followers list only if user request is accepted and public users
+24. [x] Pending Requests
+25. [x] Remove User from following

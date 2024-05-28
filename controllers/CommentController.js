@@ -1,5 +1,4 @@
 require("dotenv").config();
-const { where } = require("sequelize");
 const db = require("../models");
 
 module.exports.CreateCommentOnPost = async (req, res, next) => {
@@ -16,7 +15,7 @@ module.exports.CreateCommentOnPost = async (req, res, next) => {
     if (!existingComment) {
       return res.status(400).json({ error: "Parent comment not found" });
     }
-    
+
     const newComment = await db.Comments.create({
       user_id,
       post_id,
@@ -28,6 +27,26 @@ module.exports.CreateCommentOnPost = async (req, res, next) => {
       message: "Commented successfully!",
       success: true,
       data: newComment,
+    });
+    next();
+  } catch (err) {
+    res.status(500).json({ message: err, success: false, data: [] });
+  }
+};
+
+module.exports.DeleteComment = async (req, res, next) => {
+  const { comment_id } = req.params;
+  try {
+    const comment = await db.Comments.findByPk(comment_id);
+    if (!comment) {
+      return res.status(400).json({ error: "Comment not found" });
+    }
+
+    await comment.destroy();
+
+    res.status(200).json({
+      message: "Comment deleted successfully!",
+      success: true,
     });
     next();
   } catch (err) {

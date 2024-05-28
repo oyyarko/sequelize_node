@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
           key: "user_id",
         },
       },
+      accepted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      }
     },
     { timestamps: false }
   );

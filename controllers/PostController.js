@@ -27,6 +27,13 @@ module.exports.ListAllPosts = async (req, res, next) => {
       where: { posted_by: fetchPosts },
       limit,
       offset,
+      include: [
+        {
+          model: db.Users,
+          as: 'users',
+          attributes: ['username'], // Only include the username attribute
+        },
+      ],
     });
     
     res.status(201).json({
