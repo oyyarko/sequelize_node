@@ -29,13 +29,15 @@ const {
   AcceptOrRejectFollowRequest,
   RemoveUser,
 } = require("../controllers/FollowerController");
+const { GetMessages, SendMessage } = require("../controllers/MessageController");
 
 const router = require("express").Router();
 
 //user
 router.post("/login", Login);
 router.post("/signup", SignUp);
-router.get("/listUsers", AuthenticateUser, ListUsers);
+router.get("/listUsers", ListUsers);
+// router.get("/listUsers", AuthenticateUser, ListUsers);
 router.patch(
   "/updateUser",
   upload.single("file"),
@@ -53,6 +55,10 @@ router.post(
   AuthenticateUser,
   GetPostByUserId
 );
+
+//message
+router.post("/sendMessage", AuthenticateUser, SendMessage);
+router.get("/getMessages/:receiver_id", AuthenticateUser, GetMessages);
 
 //comments
 router.delete("/deleteComment/:comment_id", AuthenticateUser, DeleteComment);

@@ -1,11 +1,10 @@
 const { Server } = require("socket.io");
 const {createServer} = require("http");
 const express = require("express");
-const { join } = require('path');
 
 const app = express();
 const server = createServer(app);
-// const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: [
@@ -29,14 +28,8 @@ const getReceiverSocketId = (receiverId) => {
 const userSocketMap = {}; // {userId: socketId}
 
 io.on("connection", (socket) => {
-  // console.log("user connected socket.id :>> ", socket.id);
-  // socket.broadcast.emit('hi');
-  // socket.on('chat message', (msg) => {
-  //   console.log('message: ' + msg);
-  // });
   const userId = socket.handshake.query.userId;
   if (userId != "undefined") userSocketMap[userId] = socket.id;
-
 
   // io.emit() is used to send events to all the connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
