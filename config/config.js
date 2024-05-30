@@ -6,6 +6,7 @@ module.exports = {
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_DBNAME,
     "host": process.env.DB_HOST, 
+    "port": process.env.PORT,
     "dialect": "mysql",
     "dialectModule": mysql2,
     "logging": true
