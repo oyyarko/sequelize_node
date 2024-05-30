@@ -2,11 +2,11 @@ const mysql2 = require("mysql2");
 
 module.exports = {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "insta_db",
-    "host": "localhost",
-    "dialect": "mysql",
+    "username": process.env.DB_USERNAME, 
+    "password": process.env.DB_PASSWORD,
+    "database": process.env.DB_DBNAME,
+    "host": process.env.DB_HOST, 
+    "dialect": "mysql"
     "dialectModule": mysql2,
     "logging": true
   },
@@ -17,11 +17,11 @@ module.exports = {
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+ "production": {
+    "username": process.env.DB_USERNAME, 
+    "password": process.env.DB_PASSWORD,
+    "database": process.env.DB_DBNAME,
+    "host": process.env.DB_HOST, 
     "dialect": "mysql"
   }
 }
