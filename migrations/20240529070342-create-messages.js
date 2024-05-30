@@ -18,6 +18,9 @@ module.exports = {
       message: {
         type: Sequelize.STRING,
       },
+      time: {
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {

@@ -24,9 +24,14 @@ module.exports = (sequelize, DataTypes) => {
           key: "user_id",
         },
       },
+      time: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Set default value to current time
+      },
       message: { type: DataTypes.TEXT, allowNull: false },
     },
-    { timestamps: false }
+    { timestamps: false, tableName: "messages" }
   );
 
   Messages.associate = (models) => {

@@ -3,11 +3,24 @@ const bcrypt = require("bcryptjs");
 
 const db = require("../models");
 const { createSecretToken } = require("../utils/SecretToken");
+const admin = require("firebase-admin");
+const serviceAccount = require("../config/serviceAccount.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
 module.exports.SignUp = async (req, res, next) => {
-  const { username, bio, profilePicture, password, isPrivate = 0 } = req.body;
+  const {
+    username,
+    bio,
+    profilePicture,
+    password,
+    isPrivate = 0,
+    fcmToken,
+  } = req.body;
 
   try {
     if (!username || !usernameRegex.test(username)) {
@@ -27,6 +40,7 @@ module.exports.SignUp = async (req, res, next) => {
       profilePicture,
       password,
       isPrivate,
+      fcmToken,
     });
 
     const token = createSecretToken(newUser.user_id);

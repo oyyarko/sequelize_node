@@ -2,7 +2,8 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 module.exports.AuthenticateUser = (req, res, next) => {
-  const token = req.cookies.token;
+  // console.log('req :>> ', req.headers.token);
+  const token = req.cookies.token || req.headers.token;
   if (!token) {
     return res.status(401).json({ error: "Unauthorized - No token provided" });
   }

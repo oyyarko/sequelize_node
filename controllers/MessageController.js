@@ -2,6 +2,12 @@ require("dotenv").config();
 const { Op } = require("sequelize");
 const db = require("../models");
 const { getReceiverSocketId, io } = require("../socket/socket");
+const admin = require("firebase-admin");
+// const serviceAccount = require("../config/serviceAccount.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 module.exports.SendMessage = async (req, res, next) => {
   const { message, receiverId } = req.body;
@@ -16,8 +22,26 @@ module.exports.SendMessage = async (req, res, next) => {
     const newMessage = await db.Messages.create({
       senderId: loggedIn,
       receiverId,
-      message,
+      message: message,
     });
+
+    const pushMessage = {
+      data: {
+        title: "New message",
+        body: message,
+      },
+      token: receiver.fcmToken,
+    };
+
+    admin
+      .messaging()
+      .send(pushMessage)
+      .then((response) => {
+        console.log("Successfully sent message:", response);
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
+      });
 
     // SOCKET IO FUNCTIONALITY WILL GO HERE
     const receiverSocketId = getReceiverSocketId(receiverId);
@@ -32,6 +56,7 @@ module.exports.SendMessage = async (req, res, next) => {
     });
     next();
   } catch (err) {
+    console.log("err :>> ", err);
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };
@@ -40,7 +65,7 @@ module.exports.GetMessages = async (req, res, next) => {
   const { receiver_id } = req.params;
   try {
     const { id: loggedIn } = req.user;
-    const sentMessasges = await db.Users.findByPk(loggedIn, {
+    const user = await db.Users.findByPk(loggedIn, {
       include: [
         {
           model: db.Messages,
@@ -50,12 +75,6 @@ module.exports.GetMessages = async (req, res, next) => {
           as: "sentMessages",
           required: false,
         },
-      ],
-      attributes: ["username", "user_id"],
-    });
-
-    const receivedMessages = await db.Users.findByPk(receiver_id, {
-      include: [
         {
           model: db.Messages,
           where: {
@@ -68,23 +87,49 @@ module.exports.GetMessages = async (req, res, next) => {
       attributes: ["username", "user_id"],
     });
 
-    if (!receivedMessages) {
-      return res.status(404).json({ error: "User not found" });
+    // const receivedMessages = await db.Users.findByPk(receiver_id, {
+    //   include: [
+    //     {
+    //       model: db.Messages,
+    //       where: {
+    //         [Op.and]: [{ senderId: receiver_id }, { receiverId: loggedIn }],
+    //       },
+    //       as: "receivedMessages",
+    //       required: false,
+    //     },
+    //   ],
+    //   attributes: ["username", "user_id"],
+    // });
+
+    // if (!receivedMessages) {
+    //   return res.status(404).json({ error: "User not found" });
+    // }
+
+    // const messages = {
+    //   sentMessasges,
+    //   receivedMessages,
+    // };
+
+    if (!user) {
+      return { error: "User not found" };
     }
 
-    const messages = {
-      sentMessasges,
-      receivedMessages,
-    };
+    const allMessages = [
+      ...(user.sentMessages || []),
+      ...(user.receivedMessages || []),
+    ];
+    allMessages.sort((a, b) => new Date(a.time) - new Date(b.time));
 
     res.status(200).json({
       message: "Messages fetched successfully!",
       success: true,
-      data: { ...messages },
+      //   data: { ...messages },
+      data: allMessages,
     });
 
     next();
   } catch (err) {
+    console.log("err :>> ", err);
     res.status(500).json({ message: err, success: false, data: [] });
   }
 };
