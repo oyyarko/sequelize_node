@@ -1,10 +1,13 @@
-{
+const mysql2 = require("mysql2");
+
+module.exports = {
   "development": {
     "username": "root",
     "password": "",
     "database": "insta_db",
     "host": "localhost",
     "dialect": "mysql",
+    "dialectModule": mysql2,
     "logging": true
   },
   "test": {
